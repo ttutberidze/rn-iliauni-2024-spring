@@ -1,20 +1,57 @@
+import { useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
+import {LinearGradient} from 'expo-linear-gradient';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import GameScreen from './screens/GameScreen';
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+
+  const [fontsLoaded, fontError] = useFonts({
+    'comic': require('./assets/fonts/comic.ttf'),
+    'comic-bold': require('./assets/fonts/comicbd.ttf'),
+  })
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <LinearGradient 
+      style={styles.container}
+      colors={['yellow', 'orange', 'lime']}
+      onLayout={onLayoutRootView}
+    >
+      <ImageBackground
+        style={styles.container}
+        source={require('./assets/splash.jpg')}
+        imageStyle={styles.image}
+      >
+        <SafeAreaView>
+          <GameScreen />
+        </SafeAreaView>
+        <StatusBar style="auto" />
+      </ImageBackground>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center'
   },
+  image: {
+    opacity: 0.1
+  }
 });
