@@ -6,6 +6,8 @@
 4/node_modules/
 5/node_modules/
 6/node_modules/
+7/node_modules/
+7_forms/node_modules/
 
 # Expo
 .expo/
